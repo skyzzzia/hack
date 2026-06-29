@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>SYSTEM HACKED</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #000;
+    color: #ff0000;
+    font-family: 'Courier New', monospace;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+  }
+
+  /* Scanlines effect */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .skull {
+    font-size: 80px;
+    animation: pulse 1s infinite;
+    margin-bottom: 10px;
+  }
+
+  .title {
+    font-size: 52px;
+    font-weight: bold;
+    text-shadow: 0 0 20px #ff0000, 0 0 40px #ff0000;
+    animation: flicker 2s infinite;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .subtitle {
+    font-size: 22px;
+    color: #ff4444;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  .warning-box {
+    border: 2px solid #ff0000;
+    padding: 20px 40px;
+    text-align: center;
+    box-shadow: 0 0 30px #ff000088, inset 0 0 30px #ff000022;
+    margin-bottom: 30px;
+    max-width: 700px;
+  }
+
+  .warning-box p {
+    font-size: 18px;
+    color: #ffcccc;
+    line-height: 1.8;
+  }
+
+  .warning-box .highlight {
+    color: #ff0000;
+    font-weight: bold;
+    font-size: 20px;
+  }
+
+  .timer-label {
+    font-size: 16px;
+    color: #ff6666;
+    margin-bottom: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  .timer {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ff0000;
+    text-shadow: 0 0 30px #ff0000;
+    letter-spacing: 6px;
+    margin-bottom: 30px;
+    animation: pulse 1s infinite;
+  }
+
+  .password-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .password-section label {
+    font-size: 14px;
+    color: #ff6666;
+    letter-spacing: 2px;
+  }
+
+  .password-section input {
+    background: #000;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    font-family: 'Courier New', monospace;
+    font-size: 18px;
+    padding: 10px 20px;
+    text-align: center;
+    outline: none;
+    width: 280px;
+    box-shadow: 0 0 10px #ff000066;
+  }
+
+  .password-section input:focus {
+    box-shadow: 0 0 20px #ff0000;
+  }
+
+  .unlock-btn {
+    background: transparent;
+    border: 1px solid #ff0000;
+    color: #ff0000;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    padding: 10px 30px;
+    cursor: pointer;
+    letter-spacing: 2px;
+    transition: all 0.2s;
+  }
+
+  .unlock-btn:hover {
+    background: #ff000022;
+    box-shadow: 0 0 20px #ff0000;
+  }
+
+  .error-msg {
+    color: #ff4444;
+    font-size: 13px;
+    height: 18px;
+  }
+
+  .matrix-bg {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+    opacity: 0.07;
+  }
+
+  .corner {
+    position: fixed;
+    font-size: 11px;
+    color: #ff000066;
+    letter-spacing: 1px;
+  }
+  .corner.tl { top: 16px; left: 20px; }
+  .corner.tr { top: 16px; right: 20px; }
+  .corner.bl { bottom: 16px; left: 20px; }
+  .corner.br { bottom: 16px; right: 20px; }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  @keyframes flicker {
+    0%, 95%, 100% { opacity: 1; }
+    96% { opacity: 0.4; }
+    97% { opacity: 1; }
+    98% { opacity: 0.2; }
+    99% { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<canvas class="matrix-bg" id="matrix"></canvas>
+
+<div class="corner tl">SK$Z // SYSTEM ACCESS v2.6</div>
+<div class="corner tr" id="datetime"></div>
+<div class="corner bl">IP: 192.168.1.1 — TRACED</div>
+<div class="corner br">ENCRYPTION: AES-256</div>
+
+<div class="skull">💀</div>
+<div class="title">OOPS. TU T'ES FAIT HACK</div>
+<div class="subtitle">par <span style="text-shadow:0 0 10px #f00">sk$z</span></div>
+
+<div class="warning-box">
+  <p>
+    Tous tes fichiers seront <span class="highlight">CRYPTÉS</span> dans :<br>
+    <span style="font-size:13px;color:#ff6666">Documents, Photos, Vidéos, Bureau... tout.</span>
+  </p>
+</div>
+
+<div class="timer-label">⏱ temps restant avant chiffrement</div>
+<div class="timer" id="timer">03:00:00:00</div>
+
+<div class="password-section">
+  <label>ENTRER LE CODE DE DÉVERROUILLAGE</label>
+  <input type="password" id="pwd" placeholder="••••••••" onkeydown="if(event.key==='Enter') checkPwd()" />
+  <button class="unlock-btn" onclick="checkPwd()">[ DÉVERROUILLER ]</button>
+  <div class="error-msg" id="errmsg"></div>
+</div>
+
+<script>
+// Empêche de fermer / quitter
+window.addEventListener('beforeunload', e => { e.preventDefault(); e.returnValue = ''; });
+document.addEventListener('keydown', e => {
+  if (e.key === 'F4' && e.altKey) e.preventDefault();
+  if (e.key === 'F11') e.preventDefault();
+  if (e.key === 'Escape') e.preventDefault();
+});
+
+// Mot de passe secret
+const SECRET = "sk$z2026";
+
+function checkPwd() {
+  const val = document.getElementById('pwd').value;
+  const msg = document.getElementById('errmsg');
+  if (val === SECRET) {
+    document.body.innerHTML = '<div style="display:flex;height:100vh;align-items:center;justify-content:center;font-family:Courier New;color:#00ff00;font-size:32px;background:#000;text-shadow:0 0 20px #00ff00">✓ ACCÈS ACCORDÉ — bienvenue, sk$z</div>';
+    setTimeout(() => window.close(), 2000);
+  } else {
+    msg.textContent = '✗ CODE INCORRECT — tentative enregistrée';
+    document.getElementById('pwd').value = '';
+    setTimeout(() => msg.textContent = '', 2000);
+  }
+}
+
+// Compte à rebours 3 jours
+const end = new Date().getTime() + 3 * 24 * 60 * 60 * 1000;
+function updateTimer() {
+  const now = new Date().getTime();
+  const diff = end - now;
+  if (diff <= 0) {
+    document.getElementById('timer').textContent = '00:00:00:00';
+    return;
+  }
+  const d = Math.floor(diff / (1000*60*60*24));
+  const h = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const s = Math.floor((diff % (1000*60)) / 1000);
+  document.getElementById('timer').textContent =
+    String(d).padStart(2,'0') + ':' +
+    String(h).padStart(2,'0') + ':' +
+    String(m).padStart(2,'0') + ':' +
+    String(s).padStart(2,'0');
+}
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// Date coin
+function updateDT() {
+  document.getElementById('datetime').textContent = new Date().toLocaleString('fr-FR');
+}
+setInterval(updateDT, 1000);
+updateDT();
+
+// Matrix rain
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const cols = Math.floor(canvas.width / 16);
+const drops = Array(cols).fill(1);
+function drawMatrix() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#ff0000';
+  ctx.font = '14px Courier New';
+  drops.forEach((y, i) => {
+    const char = String.fromCharCode(0x30A0 + Math.random() * 96);
+    ctx.fillText(char, i * 16, y * 16);
+    if (y * 16 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+    drops[i]++;
+  });
+}
+setInterval(drawMatrix, 50);
+</script>
+</body>
+</html>
